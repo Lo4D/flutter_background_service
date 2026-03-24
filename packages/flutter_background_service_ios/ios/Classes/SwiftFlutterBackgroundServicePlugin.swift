@@ -48,8 +48,13 @@ public class SwiftFlutterBackgroundServicePlugin: FlutterPluginAppLifeCycleDeleg
         }
     }
     
+    private static var taskRegistered = false
+
     @available(iOS 13.0, *)
     public static func registerTaskIdentifier(taskIdentifier: String) {
+        guard !taskRegistered else { return }
+        taskRegistered = true
+
         BGTaskScheduler.shared.register(forTaskWithIdentifier: taskIdentifier, using: nil) { task in
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
